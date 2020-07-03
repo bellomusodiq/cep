@@ -1,0 +1,10 @@
+.Table {
+    overflow-x: auto;
+    width: 100%;
+    flex: 1;
+}
+.TableRow {
+    overflow-x: auto;
+    width: 80vw;
+    display: flex;
+}
