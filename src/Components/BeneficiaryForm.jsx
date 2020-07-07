@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-    Container, Typography, Divider, FormControl, makeStyles,
-    TextField, Grid, MenuItem, InputLabel, Select, Button
+    FormControl, Grid, TextField, Button,
+    InputLabel, Select, MenuItem, makeStyles
 } from '@material-ui/core';
 
 
@@ -30,29 +30,53 @@ const useStyles = makeStyles({
     }
 });
 
+
 const BeneficiaryForm = props => {
     const classes = useStyles();
 
     return (
-        <form style={{ width: '100%' }} onSubmit={e => props.updateBeneficiary(e)}>
-            <FormControl fullWidth className={classes.formControl}>
-                <Grid justify="space-around" style={{margin: '10px 0'}} container spacing={3} >
-                    <div style={{width: '45%'}} item md={6}>
-                        <TextField className={classes.textInput} required value={props.formValue.institution}
-                            onChange={e => props.changeInpValue(e, 'institution')}
-                            id="outlined-basic" label="Institution Name" variant="outlined" />
-                    </div>
-                    <div style={{width: '45%'}} item md={6}>
-                        <TextField className={classes.textInput} required value={props.formValue.country}
-                            onChange={e => props.changeInpValue(e, 'country')}
-                            id="outlined-basic" label="Country" variant="outlined" />
-                    </div>
-                </Grid>
-            </FormControl>
-            <Grid>
-                <Button style={{ margin: '0 20px' }} type="submit" variant="outlined">Submit</Button>
-                {!props.noEdit?<Button onClick={props.cancelEdit} variant="outlined">Cancel</Button>:null}
-            </Grid>
+        <form sytle={{ width: '100%' }} onSubmit={e => props.saveBeneficiary(e)}>
+            <div style={{ display: 'flex', justifyContent: 'space-around' }} >
+                <div style={{ width: '45%' }}>
+                    <FormControl style={{ width: '100%' }} className={classes.formControl} >
+                        <TextField className={classes.textInput} required value={props.formValue.name}
+                            onChange={e => props.changeInpValue(e, 'name')}
+                            id="outlined-basic" label="Full Names" variant="outlined" />
+                    </FormControl>
+                </div>
+                <div style={{ width: '45%' }}>
+                    <TextField className={classes.textInput} required value={props.formValue.currentClass}
+                        onChange={e => props.changeInpValue(e, 'currentClass')}
+                        id="outlined-basic" label="Current Class" variant="outlined" />
+                </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-around' }} >
+                <div style={{ width: '45%' }} >
+                    <Select
+                        labelId="demo-customized-select-label"
+                        id="demo-customized-select"
+                        value={props.formValue.gender}
+                        onChange={e => props.changeInpValue(e, 'gender')}
+                        required
+                        variant="outlined"
+                        className={classes.textInput}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value='male'>Ten</MenuItem>
+                        <MenuItem value='female'>Twenty</MenuItem>
+                        <MenuItem value='others'>Thirty</MenuItem>
+                    </Select>
+                </div>
+                <div style={{ width: '45%', }}>
+                    <TextField className={classes.textInput} required value={props.formValue.age}
+                        onChange={e => props.changeInpValue(e, 'age')}
+                        id="outlined-basic" type="number" label="Current Class" variant="outlined" />
+                </div>
+            </div>
+            <Button style={{ marginTop: 20 }}
+                type="submit" variant="outlined" color="primary">SUBMIT</Button>
         </form>
     )
 }

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -7,7 +7,10 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { TextField, FormControl } from "@material-ui/core";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+
+import axios from 'axios';
+import { BASE_URL } from '../CONFIG';
 
 
 const useStyles = makeStyles({
@@ -35,19 +38,27 @@ const useStyles = makeStyles({
     }
 });
 
-export default function OutlinedCard(props) {
+function OutlinedCard(props) {
     const classes = useStyles();
     const [formValue, changeFormValue] = useState({
-        username: '',
         email: '',
         password: '',
-        confirmPassword: ''
     })
+    const [formErrors, changeFormErrors] = useState(null)
     const changeInpValue = (e, field) => {
         changeFormValue({ ...formValue, [field]: e.target.value });
     }
     const login = e => {
         e.preventDefault();
+        const data = formValue;
+        axios.post(BASE_URL + '/auth/login/', data)
+            .then(res => {
+                localStorage.setItem('token', res.data.token);
+                props.history.replace('/')
+            })
+            .catch(err => {
+                changeFormErrors(err.response.data.message);
+            })
     }
     return (
         <Grid container justify='center' mt={10} >
@@ -59,13 +70,16 @@ export default function OutlinedCard(props) {
                             <Typography variant="h4" className={classes.title} >
                                 Login
                         </Typography>
+                            {formErrors?<Typography style={{ color: 'tomato' }}>{formErrors}</Typography>:null}
+                            <br />
                             <FormControl className={classes.formControl} >
-                                <TextField className={classes.textInput} required value={formValue.username}
-                                    onChange={e => changeInpValue(e, 'username')}
-                                    id="outlined-basic" label="username" variant="outlined" />
+                                <TextField className={classes.textInput} required value={formValue.email}
+                                    onChange={e => changeInpValue(e, 'email')}
+                                    type="email"
+                                    label="email" variant="outlined" />
                                 <TextField className={classes.textInput} required value={formValue.password}
                                     onChange={e => changeInpValue(e, 'password')}
-                                    id="outlined-basic" type="password" label="password" variant="outlined" />
+                                    type="password" label="password" variant="outlined" />
                             </FormControl>
                         </CardContent>
                         <CardActions>
@@ -80,3 +94,5 @@ export default function OutlinedCard(props) {
         </Grid>
     );
 }
+
+export default withRouter(OutlinedCard);
